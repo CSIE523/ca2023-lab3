@@ -26,6 +26,12 @@ class InstructionFetch extends Module {
     io.instruction := io.instruction_read_data
     // lab3(InstructionFetch) begin
 
+    when(!io.jump_flag_id){
+      pc := pc + 4.U
+    }.otherwise{
+      pc := io.jump_address_id
+    }
+
     // lab3(InstructionFetch) end
 
   }.otherwise {

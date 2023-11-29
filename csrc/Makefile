@@ -22,6 +22,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 	$(OBJCOPY) -O binary -j .text -j .data $< $@
 
 BINS = \
+	binarization.asmbin \
 	fibonacci.asmbin \
 	hello.asmbin \
 	mmio.asmbin \

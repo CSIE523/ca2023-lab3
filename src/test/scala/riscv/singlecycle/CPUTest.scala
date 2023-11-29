@@ -63,6 +63,33 @@ class TestTopModule(exeFilename: String) extends Module {
   io.mem_debug_read_data    := mem.io.debug_read_data
 }
 
+class hw2Test extends AnyFlatSpec with ChiselScalatestTester {
+  behavior.of("Single Cycle CPU")
+  it should "binarize the pixel" in {
+    test(new TestTopModule("binarization.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
+      for (i <- 1 to 500) {
+        c.clock.step(100)
+        c.io.mem_debug_read_address.poke((i * 4).U) // Avoid timeout
+      }
+      c.io.mem_debug_read_address.poke(2.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0x0.U)
+      c.io.mem_debug_read_address.poke(4.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0x0.U)
+      c.io.mem_debug_read_address.poke(6.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0x0.U)
+      c.io.mem_debug_read_address.poke(8.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0xff.U)
+      c.io.mem_debug_read_address.poke(10.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0xff.U)
+    }
+  }
+}
+
 class FibonacciTest extends AnyFlatSpec with ChiselScalatestTester {
   behavior.of("Single Cycle CPU")
   it should "recursively calculate Fibonacci(10)" in {
